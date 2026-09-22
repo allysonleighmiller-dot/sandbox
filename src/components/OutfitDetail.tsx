@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { deleteOutfit, updateOutfit, addShoppingItem, type Outfit } from '../db'
 import { useStore } from '../store'
+import { CATEGORIES } from '../categories'
 import OutfitImage from './OutfitImage'
-
-const CATEGORIES = ['Casual', 'Work', 'Date Night', 'Formal', 'Athleisure', 'Loungewear', 'Other']
 
 export default function OutfitDetail({
   outfit,

@@ -4,6 +4,8 @@ A mobile-first PWA for saving outfit screenshots, tagging them, and building a s
 
 ## Features
 
+- **Bulk upload** — select many screenshots at once and review/edit them all before saving.
+- **AI auto-tag (optional)** — suggest a category + tags per photo using Claude's vision model, one tap for a single photo or all of them at once. Requires a one-time backend setup (see below); everything else works without it.
 - **Save outfits** — upload a screenshot (from your camera roll or camera), tag it with category/tags/notes.
 - **Browse & search** — grid gallery, filter by category, search tags/notes.
 - **Outfit detail** — full image view, edit tags/notes/category, favorite, delete.
@@ -32,6 +34,23 @@ This repo includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) th
    - **Android (Chrome):** tap the menu (⋮) → "Add to Home screen" / "Install app".
 
 It'll now open full-screen like a normal app, and your saved outfits stay on your phone between visits.
+
+## Auto-tag setup (optional)
+
+Everything except auto-tagging works with zero setup, fully local. Auto-tagging calls Claude's vision API to look at a photo and suggest a category + tags — that requires a tiny backend, because a static site (like this one on GitHub Pages) can't hold an API key without exposing it to anyone who opens the page.
+
+The backend is a single [Cloudflare Worker](https://workers.cloudflare.com/) (free tier is plenty) in `worker/index.js`. It receives one photo, calls Claude, and returns `{ category, tags }` — it never stores anything.
+
+**Deploy it:**
+
+1. Get an Anthropic API key from [console.anthropic.com](https://console.anthropic.com/).
+2. Install Wrangler and log in: `npm install -g wrangler && wrangler login`
+3. From the `worker/` directory: `wrangler deploy`
+4. Set your API key as a secret (never commit it): `wrangler secret put ANTHROPIC_API_KEY`
+5. Wrangler prints your Worker's URL (something like `https://outfit-book-autotag.<you>.workers.dev`).
+6. In the app, go to **Add → the gear icon** and paste that URL in.
+
+That's it — "Auto-tag this one" and "Auto-tag all" will now work. Each call costs a small fraction of a cent (Claude Opus 5 vision, one short request per photo); you can swap the `MODEL` constant in `worker/index.js` for `claude-haiku-4-5` if you want it cheaper for large batches.
 
 ## Notes on the shopping-smarter workflow
 

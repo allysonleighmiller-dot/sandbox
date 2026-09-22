@@ -1,0 +1,6 @@
+name = "outfit-book-autotag"
+main = "index.js"
+compatibility_date = "2026-01-01"
+
+# After deploying, set your Anthropic API key as a secret (never commit it):
+#   npx wrangler secret put ANTHROPIC_API_KEY
