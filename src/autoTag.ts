@@ -17,6 +17,25 @@ export function setAutoTagEndpoint(url: string): void {
   }
 }
 
+/**
+ * Normalizes a user-typed endpoint into an absolute http(s) URL, adding a
+ * "https://" scheme if one is missing. Without this, a scheme-less value
+ * (e.g. pasted without "https://") resolves as a path relative to the app's
+ * own origin instead of throwing - silently POSTing to the wrong server.
+ */
+export function normalizeEndpointUrl(input: string): string | null {
+  const trimmed = input.trim()
+  if (!trimmed) return null
+  const withScheme = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`
+  try {
+    const url = new URL(withScheme)
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return null
+    return url.toString()
+  } catch {
+    return null
+  }
+}
+
 async function downscaleForUpload(blob: Blob): Promise<{ dataUrl: string; mediaType: string }> {
   const bitmap = await createImageBitmap(blob)
   const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height))
@@ -43,9 +62,13 @@ export interface TagSuggestion {
 export class AutoTagError extends Error {}
 
 export async function suggestTagsForImage(blob: Blob): Promise<TagSuggestion> {
-  const endpoint = getAutoTagEndpoint()
-  if (!endpoint) {
+  const rawEndpoint = getAutoTagEndpoint()
+  if (!rawEndpoint) {
     throw new AutoTagError('No auto-tag endpoint configured yet.')
+  }
+  const endpoint = normalizeEndpointUrl(rawEndpoint)
+  if (!endpoint) {
+    throw new AutoTagError('The saved auto-tag endpoint is not a valid URL. Open Settings and re-enter it.')
   }
 
   const { dataUrl, mediaType } = await downscaleForUpload(blob)

@@ -1,11 +1,22 @@
 import { useState } from 'react'
-import { getAutoTagEndpoint, setAutoTagEndpoint } from '../autoTag'
+import { getAutoTagEndpoint, setAutoTagEndpoint, normalizeEndpointUrl } from '../autoTag'
 
 export default function AutoTagSettings({ onClose }: { onClose: () => void }) {
   const [value, setValue] = useState(getAutoTagEndpoint())
+  const [error, setError] = useState<string | null>(null)
 
   function handleSave() {
-    setAutoTagEndpoint(value)
+    if (!value.trim()) {
+      setAutoTagEndpoint('')
+      onClose()
+      return
+    }
+    const normalized = normalizeEndpointUrl(value)
+    if (!normalized) {
+      setError("That doesn't look like a valid URL.")
+      return
+    }
+    setAutoTagEndpoint(normalized)
     onClose()
   }
 
@@ -21,12 +32,18 @@ export default function AutoTagSettings({ onClose }: { onClose: () => void }) {
         </p>
         <input
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value)
+            setError(null)
+          }}
           placeholder="https://your-worker.your-subdomain.workers.dev"
-          className="mt-4 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 outline-none focus:border-amber-500"
+          className={`mt-4 w-full rounded-xl border bg-zinc-950 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 outline-none ${
+            error ? 'border-red-500' : 'border-zinc-800 focus:border-amber-500'
+          }`}
           autoCapitalize="off"
           autoCorrect="off"
         />
+        {error && <p className="mt-1.5 text-xs text-red-400">{error}</p>}
         <div className="mt-4 flex gap-2">
           <button
             onClick={onClose}
