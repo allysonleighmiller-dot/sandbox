@@ -18,6 +18,15 @@ export interface ShoppingItem {
   createdAt: number
 }
 
+export interface ClosetItem {
+  id: string
+  image: Blob
+  type: string
+  tags: string[]
+  notes: string
+  createdAt: number
+}
+
 interface OutfitDB extends DBSchema {
   outfits: {
     key: string
@@ -29,22 +38,33 @@ interface OutfitDB extends DBSchema {
     value: ShoppingItem
     indexes: { 'by-createdAt': number }
   }
+  closetItems: {
+    key: string
+    value: ClosetItem
+    indexes: { 'by-createdAt': number }
+  }
 }
 
 const DB_NAME = 'outfit-book'
-const DB_VERSION = 1
+const DB_VERSION = 2
 
 let dbPromise: Promise<IDBPDatabase<OutfitDB>> | null = null
 
 function getDB() {
   if (!dbPromise) {
     dbPromise = openDB<OutfitDB>(DB_NAME, DB_VERSION, {
-      upgrade(db) {
-        const outfits = db.createObjectStore('outfits', { keyPath: 'id' })
-        outfits.createIndex('by-createdAt', 'createdAt')
+      upgrade(db, oldVersion) {
+        if (oldVersion < 1) {
+          const outfits = db.createObjectStore('outfits', { keyPath: 'id' })
+          outfits.createIndex('by-createdAt', 'createdAt')
 
-        const shoppingItems = db.createObjectStore('shoppingItems', { keyPath: 'id' })
-        shoppingItems.createIndex('by-createdAt', 'createdAt')
+          const shoppingItems = db.createObjectStore('shoppingItems', { keyPath: 'id' })
+          shoppingItems.createIndex('by-createdAt', 'createdAt')
+        }
+        if (oldVersion < 2) {
+          const closetItems = db.createObjectStore('closetItems', { keyPath: 'id' })
+          closetItems.createIndex('by-createdAt', 'createdAt')
+        }
       },
     })
   }
@@ -135,4 +155,39 @@ export async function updateShoppingItem(item: ShoppingItem): Promise<void> {
 export async function deleteShoppingItem(id: string): Promise<void> {
   const db = await getDB()
   await db.delete('shoppingItems', id)
+}
+
+export async function addClosetItem(input: {
+  image: Blob
+  type: string
+  tags: string[]
+  notes: string
+}): Promise<ClosetItem> {
+  const db = await getDB()
+  const item: ClosetItem = {
+    id: makeId(),
+    image: input.image,
+    type: input.type,
+    tags: input.tags,
+    notes: input.notes,
+    createdAt: Date.now(),
+  }
+  await db.put('closetItems', item)
+  return item
+}
+
+export async function getAllClosetItems(): Promise<ClosetItem[]> {
+  const db = await getDB()
+  const all = await db.getAllFromIndex('closetItems', 'by-createdAt')
+  return all.reverse()
+}
+
+export async function updateClosetItem(item: ClosetItem): Promise<void> {
+  const db = await getDB()
+  await db.put('closetItems', item)
+}
+
+export async function deleteClosetItem(id: string): Promise<void> {
+  const db = await getDB()
+  await db.delete('closetItems', id)
 }

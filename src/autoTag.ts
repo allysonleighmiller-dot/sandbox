@@ -1,3 +1,5 @@
+import type { ClosetItem, Outfit } from './db'
+
 const ENDPOINT_KEY = 'outfitbook.autoTagEndpoint'
 const MAX_DIMENSION = 1024
 
@@ -54,14 +56,9 @@ async function downscaleForUpload(blob: Blob): Promise<{ dataUrl: string; mediaT
   return { dataUrl, mediaType: 'image/jpeg' }
 }
 
-export interface TagSuggestion {
-  category: string
-  tags: string[]
-}
-
 export class AutoTagError extends Error {}
 
-export async function suggestTagsForImage(blob: Blob): Promise<TagSuggestion> {
+async function postToWorker(body: Record<string, unknown>): Promise<unknown> {
   const rawEndpoint = getAutoTagEndpoint()
   if (!rawEndpoint) {
     throw new AutoTagError('No auto-tag endpoint configured yet.')
@@ -71,15 +68,12 @@ export async function suggestTagsForImage(blob: Blob): Promise<TagSuggestion> {
     throw new AutoTagError('The saved auto-tag endpoint is not a valid URL. Open Settings and re-enter it.')
   }
 
-  const { dataUrl, mediaType } = await downscaleForUpload(blob)
-  const base64 = dataUrl.slice(dataUrl.indexOf(',') + 1)
-
   let response: Response
   try {
     response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: base64, mediaType }),
+      body: JSON.stringify(body),
     })
   } catch {
     throw new AutoTagError('Could not reach the auto-tag service. Check the endpoint URL and your connection.')
@@ -89,9 +83,9 @@ export async function suggestTagsForImage(blob: Blob): Promise<TagSuggestion> {
     const rawText = await response.text().catch(() => '')
     let message = `Auto-tag request failed (${response.status})`
     try {
-      const body = JSON.parse(rawText)
-      if (body?.error) message = body.error
-      if (body?.detail) message = `${message}: ${String(body.detail).slice(0, 300)}`
+      const parsed = JSON.parse(rawText)
+      if (parsed?.error) message = parsed.error
+      if (parsed?.detail) message = `${message}: ${String(parsed.detail).slice(0, 300)}`
     } catch {
       // Not JSON - the response likely didn't come from our worker at all
       // (e.g. an edge/proxy block page). Surface it so it's diagnosable
@@ -103,9 +97,66 @@ export async function suggestTagsForImage(blob: Blob): Promise<TagSuggestion> {
     throw new AutoTagError(message)
   }
 
-  const data = await response.json()
+  return response.json()
+}
+
+export interface TagSuggestion {
+  category: string
+  tags: string[]
+}
+
+export async function suggestTagsForImage(blob: Blob): Promise<TagSuggestion> {
+  const { dataUrl, mediaType } = await downscaleForUpload(blob)
+  const base64 = dataUrl.slice(dataUrl.indexOf(',') + 1)
+  const data = (await postToWorker({ mode: 'tag_outfit', image: base64, mediaType })) as Partial<TagSuggestion>
   if (!data?.category || !Array.isArray(data?.tags)) {
     throw new AutoTagError('Auto-tag service returned an unexpected response.')
   }
   return { category: data.category, tags: data.tags }
+}
+
+export interface ItemTagSuggestion {
+  type: string
+  tags: string[]
+}
+
+export async function suggestItemTags(blob: Blob): Promise<ItemTagSuggestion> {
+  const { dataUrl, mediaType } = await downscaleForUpload(blob)
+  const base64 = dataUrl.slice(dataUrl.indexOf(',') + 1)
+  const data = (await postToWorker({ mode: 'tag_item', image: base64, mediaType })) as Partial<ItemTagSuggestion>
+  if (!data?.type || !Array.isArray(data?.tags)) {
+    throw new AutoTagError('Auto-tag service returned an unexpected response.')
+  }
+  return { type: data.type, tags: data.tags }
+}
+
+export interface OutfitSuggestion {
+  title: string
+  itemIds: string[]
+  reason: string
+}
+
+export async function suggestOutfits(
+  closetItems: ClosetItem[],
+  inspiration: Outfit[],
+): Promise<OutfitSuggestion[]> {
+  const data = (await postToWorker({
+    mode: 'suggest_outfits',
+    closetItems: closetItems.map((item) => ({
+      id: item.id,
+      type: item.type,
+      tags: item.tags,
+      notes: item.notes,
+    })),
+    inspiration: inspiration.map((outfit) => ({
+      category: outfit.category,
+      tags: outfit.tags,
+      notes: outfit.notes,
+    })),
+  })) as { outfits?: Array<{ title: string; item_ids: string[]; reason: string }> }
+
+  if (!Array.isArray(data?.outfits)) {
+    throw new AutoTagError('Auto-tag service returned an unexpected response.')
+  }
+  return data.outfits.map((o) => ({ title: o.title, itemIds: o.item_ids, reason: o.reason }))
 }

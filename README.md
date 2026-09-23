@@ -9,6 +9,7 @@ A mobile-first PWA for saving outfit screenshots, tagging them, and building a s
 - **Save outfits** — upload a screenshot (from your camera roll or camera), tag it with category/tags/notes.
 - **Browse & search** — grid gallery, filter by category, search tags/notes.
 - **Outfit detail** — full image view, edit tags/notes/category, favorite, delete.
+- **Closet** — log the clothes you actually own (photo + type + tags, same bulk-upload and auto-tag flow as outfits), then tap **Suggest outfits** to get AI-generated combinations built only from what you own, informed by the outfits you've saved as inspiration.
 - **Shopping list** — jot down items you still need, optionally linked back to the outfit that inspired them.
 - **Installable** — add it to your phone's home screen and it behaves like a native app (works offline, no browser chrome).
 
@@ -51,6 +52,8 @@ The backend is a single [Cloudflare Worker](https://workers.cloudflare.com/) (fr
 6. In the app, go to **Add → the gear icon** and paste that URL in.
 
 That's it — "Auto-tag this one" and "Auto-tag all" will now work. Each call costs a small fraction of a cent (Claude Opus 5 vision, one short request per photo); you can swap the `MODEL` constant in `worker/index.js` for `claude-haiku-4-5` if you want it cheaper for large batches.
+
+The same Worker also powers Closet auto-tagging and outfit suggestions (it dispatches on a `mode` field in the request), so if you deployed it before the Closet tab existed, redeploy it once from the current `worker/index.js` (Cloudflare dashboard: Edit code → paste the current file → Deploy, or `wrangler deploy` again) — no new secret or settings needed, same URL keeps working.
 
 ## Notes on the shopping-smarter workflow
 

@@ -2,16 +2,20 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import {
   type Outfit,
   type ShoppingItem,
+  type ClosetItem,
   getAllOutfits,
   getAllShoppingItems,
+  getAllClosetItems,
 } from './db'
 
 interface StoreValue {
   outfits: Outfit[]
   shoppingItems: ShoppingItem[]
+  closetItems: ClosetItem[]
   loading: boolean
   refreshOutfits: () => Promise<void>
   refreshShoppingItems: () => Promise<void>
+  refreshClosetItems: () => Promise<void>
 }
 
 const StoreContext = createContext<StoreValue | null>(null)
@@ -19,6 +23,7 @@ const StoreContext = createContext<StoreValue | null>(null)
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [outfits, setOutfits] = useState<Outfit[]>([])
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([])
+  const [closetItems, setClosetItems] = useState<ClosetItem[]>([])
   const [loading, setLoading] = useState(true)
 
   const refreshOutfits = useCallback(async () => {
@@ -29,13 +34,27 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setShoppingItems(await getAllShoppingItems())
   }, [])
 
+  const refreshClosetItems = useCallback(async () => {
+    setClosetItems(await getAllClosetItems())
+  }, [])
+
   useEffect(() => {
-    Promise.all([refreshOutfits(), refreshShoppingItems()]).finally(() => setLoading(false))
-  }, [refreshOutfits, refreshShoppingItems])
+    Promise.all([refreshOutfits(), refreshShoppingItems(), refreshClosetItems()]).finally(() =>
+      setLoading(false),
+    )
+  }, [refreshOutfits, refreshShoppingItems, refreshClosetItems])
 
   return (
     <StoreContext.Provider
-      value={{ outfits, shoppingItems, loading, refreshOutfits, refreshShoppingItems }}
+      value={{
+        outfits,
+        shoppingItems,
+        closetItems,
+        loading,
+        refreshOutfits,
+        refreshShoppingItems,
+        refreshClosetItems,
+      }}
     >
       {children}
     </StoreContext.Provider>

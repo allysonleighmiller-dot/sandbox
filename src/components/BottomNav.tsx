@@ -1,7 +1,12 @@
-export type Tab = 'gallery' | 'add' | 'shopping'
+export type Tab = 'gallery' | 'closet' | 'add' | 'shopping'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'gallery', label: 'Outfits', icon: 'M4 5h16M4 12h16M4 19h16' },
+  {
+    id: 'closet',
+    label: 'Closet',
+    icon: 'M9 3l3 2.2L15 3l3.6 2.4a2 2 0 01.9 1.7v.8l-3 1v10a1 1 0 01-1 1H8.5a1 1 0 01-1-1V9l-3-1v-.9a2 2 0 01.9-1.7z',
+  },
   { id: 'add', label: 'Add', icon: 'M12 4v16m-8-8h16' },
   { id: 'shopping', label: 'Shopping', icon: 'M6 6h15l-1.5 9h-12z M6 6L4 3H2 M9 20a1 1 0 100-2 1 1 0 000 2zM18 20a1 1 0 100-2 1 1 0 000 2z' },
 ]
