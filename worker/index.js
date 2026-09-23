@@ -26,10 +26,8 @@ const TAGGING_TOOL = {
       tags: {
         type: 'array',
         items: { type: 'string' },
-        minItems: 3,
-        maxItems: 8,
         description:
-          '3-8 short lowercase tags: dominant colors, garment types, and style/season descriptors (e.g. "denim", "olive green", "oversized blazer", "casual", "fall").',
+          'Exactly 3-8 short lowercase tags: dominant colors, garment types, and style/season descriptors (e.g. "denim", "olive green", "oversized blazer", "casual", "fall").',
       },
     },
     required: ['category', 'tags'],

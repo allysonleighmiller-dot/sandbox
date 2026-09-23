@@ -91,6 +91,7 @@ export async function suggestTagsForImage(blob: Blob): Promise<TagSuggestion> {
     try {
       const body = JSON.parse(rawText)
       if (body?.error) message = body.error
+      if (body?.detail) message = `${message}: ${String(body.detail).slice(0, 300)}`
     } catch {
       // Not JSON - the response likely didn't come from our worker at all
       // (e.g. an edge/proxy block page). Surface it so it's diagnosable
