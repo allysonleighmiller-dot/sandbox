@@ -63,12 +63,18 @@ export async function suggestTagsForImage(blob: Blob): Promise<TagSuggestion> {
   }
 
   if (!response.ok) {
+    const rawText = await response.text().catch(() => '')
     let message = `Auto-tag request failed (${response.status})`
     try {
-      const body = await response.json()
+      const body = JSON.parse(rawText)
       if (body?.error) message = body.error
     } catch {
-      // ignore parse failure, use default message
+      // Not JSON - the response likely didn't come from our worker at all
+      // (e.g. an edge/proxy block page). Surface it so it's diagnosable
+      // without dev tools.
+      if (rawText.trim()) {
+        message = `${message}: ${rawText.trim().slice(0, 200)}`
+      }
     }
     throw new AutoTagError(message)
   }

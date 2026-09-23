@@ -222,10 +222,10 @@ export default function AddOutfit({ onSaved }: { onSaved: () => void }) {
                 {item.status === 'tagged' && (
                   <span className="text-[11px] text-emerald-400">Tagged</span>
                 )}
-                {item.status === 'error' && (
-                  <span className="text-[11px] text-red-400">{item.error}</span>
-                )}
               </div>
+              {item.status === 'error' && (
+                <p className="mt-1.5 break-words text-[11px] text-red-400">{item.error}</p>
+              )}
             </div>
           ))}
         </div>
