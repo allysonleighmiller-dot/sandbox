@@ -71,21 +71,21 @@ export default function OutfitDetail({
   }
 
   return (
-    <div className="fixed inset-0 z-30 flex flex-col bg-zinc-950">
+    <div className="fixed inset-0 z-30 flex flex-col bg-ivory">
       <div className="flex items-center justify-between px-4 pb-2 pt-[calc(env(safe-area-inset-top)+12px)]">
-        <button onClick={onClose} className="p-1 text-zinc-300">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
+        <button onClick={onClose} className="p-1 text-espresso">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="h-6 w-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         <div className="flex items-center gap-3">
-          <button onClick={handleToggleFavorite} className={favorite ? 'text-amber-400' : 'text-zinc-500'}>
-            <svg viewBox="0 0 24 24" fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} className="h-6 w-6">
+          <button onClick={handleToggleFavorite} className={favorite ? 'text-camel' : 'text-taupe'}>
+            <svg viewBox="0 0 24 24" fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={1.6} className="h-6 w-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 17.3 6.2 21l1.6-6.9L2 9.2l7-.6L12 2l3 6.6 7 .6-5.8 4.9L17.8 21z" />
             </svg>
           </button>
-          <button onClick={handleDelete} className="text-zinc-500">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
+          <button onClick={handleDelete} className="text-taupe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="h-6 w-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 7h12M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m2 0-1 13a1 1 0 01-1 1H8a1 1 0 01-1-1L6 7h12z" />
             </svg>
           </button>
@@ -93,13 +93,13 @@ export default function OutfitDetail({
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 pb-8">
-        <div className="overflow-hidden rounded-2xl bg-zinc-900">
+        <div className="overflow-hidden rounded-lg border border-oat bg-oat">
           <OutfitImage blob={outfit.image} alt={outfit.notes || 'Saved outfit'} className="max-h-[55vh] w-full object-contain" />
         </div>
 
         <div className="mt-5 space-y-4">
           <div>
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-500">
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-taupe">
               Category
             </label>
             <div className="flex flex-wrap gap-2">
@@ -112,8 +112,8 @@ export default function OutfitDetail({
                   }}
                   className={`rounded-full px-3 py-1.5 text-xs font-medium ${
                     category === c
-                      ? 'bg-amber-400 text-zinc-950'
-                      : 'border border-zinc-800 bg-zinc-900 text-zinc-400'
+                      ? 'bg-espresso text-ivory'
+                      : 'border border-oat bg-white text-taupe'
                   }`}
                 >
                   {c}
@@ -123,7 +123,7 @@ export default function OutfitDetail({
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-500">
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-taupe">
               Tags
             </label>
             <input
@@ -132,12 +132,12 @@ export default function OutfitDetail({
                 setTagsInput(e.target.value)
                 setDirty(true)
               }}
-              className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-sm text-zinc-100 outline-none focus:border-amber-500"
+              className="w-full rounded-md border border-oat bg-white px-3.5 py-2.5 text-sm text-espresso outline-none focus:border-camel"
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-500">
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-taupe">
               Notes
             </label>
             <textarea
@@ -147,21 +147,21 @@ export default function OutfitDetail({
                 setDirty(true)
               }}
               rows={3}
-              className="w-full resize-none rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-sm text-zinc-100 outline-none focus:border-amber-500"
+              className="w-full resize-none rounded-md border border-oat bg-white px-3.5 py-2.5 text-sm text-espresso outline-none focus:border-camel"
             />
           </div>
 
           {dirty && (
             <button
               onClick={handleSaveEdits}
-              className="w-full rounded-xl bg-amber-400 py-2.5 text-sm font-semibold text-zinc-950"
+              className="w-full rounded-md bg-espresso py-2.5 text-sm font-medium text-ivory"
             >
               Save changes
             </button>
           )}
 
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-500">
+          <div className="rounded-lg border border-oat bg-white/60 p-4">
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-taupe">
               Need to shop for something from this look?
             </label>
             <div className="flex gap-2">
@@ -169,11 +169,11 @@ export default function OutfitDetail({
                 value={shoppingText}
                 onChange={(e) => setShoppingText(e.target.value)}
                 placeholder="e.g. brown leather belt"
-                className="flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 outline-none focus:border-amber-500"
+                className="flex-1 rounded-md border border-oat bg-ivory px-3.5 py-2.5 text-sm text-espresso placeholder-taupe/60 outline-none focus:border-camel"
               />
               <button
                 onClick={handleAddToShoppingList}
-                className="shrink-0 rounded-xl bg-amber-400 px-4 text-sm font-semibold text-zinc-950"
+                className="shrink-0 rounded-md bg-espresso px-4 text-sm font-medium text-ivory"
               >
                 {addedToList ? 'Added' : 'Add'}
               </button>

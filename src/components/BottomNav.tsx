@@ -20,7 +20,7 @@ export default function BottomNav({
 }) {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-20 flex border-t border-zinc-800 bg-zinc-950/95 backdrop-blur pb-[env(safe-area-inset-bottom)]"
+      className="fixed bottom-0 left-0 right-0 z-20 flex border-t border-oat bg-ivory/95 backdrop-blur pb-[env(safe-area-inset-bottom)]"
       aria-label="Primary"
     >
       {TABS.map((tab) => {
@@ -29,15 +29,15 @@ export default function BottomNav({
           <button
             key={tab.id}
             onClick={() => onChange(tab.id)}
-            className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-xs font-medium transition-colors ${
-              isActive ? 'text-amber-400' : 'text-zinc-500'
+            className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-xs font-medium tracking-wide transition-colors ${
+              isActive ? 'text-espresso' : 'text-taupe/70'
             }`}
           >
             <svg
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth={2}
+              strokeWidth={1.5}
               strokeLinecap="round"
               strokeLinejoin="round"
               className="h-6 w-6"

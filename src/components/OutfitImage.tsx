@@ -11,7 +11,7 @@ export default function OutfitImage({
 }) {
   const url = useObjectUrl(blob)
   if (!url) {
-    return <div className={`animate-pulse bg-zinc-800 ${className ?? ''}`} />
+    return <div className={`animate-pulse bg-oat ${className ?? ''}`} />
   }
   return <img src={url} alt={alt} className={className} />
 }

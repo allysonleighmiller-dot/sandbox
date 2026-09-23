@@ -115,14 +115,14 @@ export default function AddOutfit({ onSaved }: { onSaved: () => void }) {
     <div className="flex h-full flex-col overflow-y-auto px-4 pb-28 pt-[calc(env(safe-area-inset-top)+16px)]">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">Add outfits</h1>
-          <p className="mt-1 text-sm text-zinc-500">
+          <h1 className="font-display text-3xl font-medium tracking-tight text-espresso">Add outfits</h1>
+          <p className="mt-1 text-sm text-taupe">
             Select one or many screenshots, then auto-tag or edit before saving.
           </p>
         </div>
         <button
           onClick={() => setSettingsOpen(true)}
-          className="mt-0.5 shrink-0 rounded-full border border-zinc-800 p-2 text-zinc-400"
+          className="mt-0.5 shrink-0 rounded-full border border-oat p-2 text-taupe"
           aria-label="Auto-tag settings"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-[18px] w-[18px]">
@@ -135,15 +135,15 @@ export default function AddOutfit({ onSaved }: { onSaved: () => void }) {
       {items.length === 0 ? (
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="mt-5 flex aspect-[3/4] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-zinc-700 bg-zinc-900"
+          className="mt-5 flex aspect-[3/4] w-full items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-oat bg-white"
         >
-          <div className="flex flex-col items-center gap-2 text-zinc-500">
+          <div className="flex flex-col items-center gap-2 text-taupe">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-10 w-10">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16.5V6a2 2 0 012-2h12a2 2 0 012 2v10.5M4 16.5l4.5-4.5a2 2 0 012.8 0l1.7 1.7a2 2 0 002.8 0L19 10M4 16.5V18a2 2 0 002 2h12a2 2 0 002-2v-1.5" />
               <circle cx="9" cy="9" r="1.5" fill="currentColor" stroke="none" />
             </svg>
             <span className="text-sm font-medium">Tap to choose screenshots</span>
-            <span className="text-xs text-zinc-600">You can select more than one</span>
+            <span className="text-xs text-taupe/70">You can select more than one</span>
           </div>
         </button>
       ) : (
@@ -151,26 +151,26 @@ export default function AddOutfit({ onSaved }: { onSaved: () => void }) {
           <div className="flex gap-2">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex-1 rounded-xl border border-zinc-800 bg-zinc-900 py-2.5 text-sm font-medium text-zinc-300"
+              className="flex-1 rounded-md border border-oat bg-white py-2.5 text-sm font-medium text-espresso"
             >
               Add more
             </button>
             <button
               onClick={handleAutoTagAll}
               disabled={autoTagging}
-              className="flex-1 rounded-xl bg-zinc-800 py-2.5 text-sm font-medium text-amber-400 disabled:opacity-50"
+              className="flex-1 rounded-md border border-camel py-2.5 text-sm font-medium text-camel disabled:opacity-50"
             >
               {autoTagging ? 'Auto-tagging...' : `Auto-tag all (${items.length})`}
             </button>
           </div>
 
           {items.map((item) => (
-            <div key={item.id} className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3">
+            <div key={item.id} className="rounded-lg border border-oat bg-white p-3">
               <div className="flex gap-3">
                 <img
                   src={item.previewUrl}
                   alt="Outfit preview"
-                  className="h-24 w-20 shrink-0 rounded-lg object-cover"
+                  className="h-24 w-20 shrink-0 rounded-md object-cover"
                 />
                 <div className="min-w-0 flex-1 space-y-2">
                   <div className="flex flex-wrap gap-1.5">
@@ -180,8 +180,8 @@ export default function AddOutfit({ onSaved }: { onSaved: () => void }) {
                         onClick={() => updateItem(item.id, { category: c })}
                         className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${
                           item.category === c
-                            ? 'bg-amber-400 text-zinc-950'
-                            : 'border border-zinc-800 text-zinc-400'
+                            ? 'bg-espresso text-ivory'
+                            : 'border border-oat text-taupe'
                         }`}
                       >
                         {c}
@@ -192,18 +192,18 @@ export default function AddOutfit({ onSaved }: { onSaved: () => void }) {
                     value={item.tagsInput}
                     onChange={(e) => updateItem(item.id, { tagsInput: e.target.value })}
                     placeholder="tags: denim, neutral, fall"
-                    className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none focus:border-amber-500"
+                    className="w-full rounded-md border border-oat bg-ivory px-2.5 py-1.5 text-xs text-espresso placeholder-taupe/60 outline-none focus:border-camel"
                   />
                   <input
                     value={item.notes}
                     onChange={(e) => updateItem(item.id, { notes: e.target.value })}
                     placeholder="notes (optional)"
-                    className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none focus:border-amber-500"
+                    className="w-full rounded-md border border-oat bg-ivory px-2.5 py-1.5 text-xs text-espresso placeholder-taupe/60 outline-none focus:border-camel"
                   />
                 </div>
                 <button
                   onClick={() => removeItem(item.id)}
-                  className="shrink-0 self-start p-1 text-zinc-600"
+                  className="shrink-0 self-start p-1 text-taupe/70"
                   aria-label="Remove"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
@@ -215,16 +215,16 @@ export default function AddOutfit({ onSaved }: { onSaved: () => void }) {
                 <button
                   onClick={() => autoTagItem(item.id)}
                   disabled={item.status === 'tagging'}
-                  className="text-xs font-medium text-amber-400 disabled:opacity-50"
+                  className="text-xs font-medium text-camel disabled:opacity-50"
                 >
                   {item.status === 'tagging' ? 'Tagging...' : 'Auto-tag this one'}
                 </button>
                 {item.status === 'tagged' && (
-                  <span className="text-[11px] text-emerald-400">Tagged</span>
+                  <span className="text-[11px] text-camel">Tagged</span>
                 )}
               </div>
               {item.status === 'error' && (
-                <p className="mt-1.5 break-words text-[11px] text-red-400">{item.error}</p>
+                <p className="mt-1.5 break-words text-[11px] text-rust">{item.error}</p>
               )}
             </div>
           ))}
@@ -244,7 +244,7 @@ export default function AddOutfit({ onSaved }: { onSaved: () => void }) {
         <button
           onClick={handleSaveAll}
           disabled={saving}
-          className="mt-6 w-full rounded-xl bg-amber-400 py-3 text-sm font-semibold text-zinc-950 disabled:opacity-40"
+          className="mt-6 w-full rounded-md bg-espresso py-3 text-sm font-medium text-ivory disabled:opacity-40"
         >
           {saving ? 'Saving...' : `Save ${items.length} outfit${items.length > 1 ? 's' : ''}`}
         </button>

@@ -15,7 +15,7 @@ function Screens() {
   const openOutfit = outfits.find((o) => o.id === openOutfitId) ?? null
 
   return (
-    <div className="h-dvh bg-zinc-950 text-zinc-100">
+    <div className="h-dvh bg-ivory text-espresso">
       <div className="h-full pb-16">
         {tab === 'gallery' && <Gallery onOpen={setOpenOutfitId} />}
         {tab === 'closet' && <Closet />}

@@ -132,22 +132,22 @@ export default function Closet() {
 
   return (
     <div className="flex h-full flex-col overflow-y-auto px-4 pb-28 pt-[calc(env(safe-area-inset-top)+16px)]">
-      <h1 className="text-xl font-semibold tracking-tight">My Closet</h1>
-      <p className="mt-1 text-sm text-zinc-500">
+      <h1 className="font-display text-3xl font-medium tracking-tight text-espresso">My Closet</h1>
+      <p className="mt-1 text-sm text-taupe">
         Add clothes you already own, then get AI outfit ideas built from them and your saved inspiration.
       </p>
 
       <div className="mt-4 flex gap-2">
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex-1 rounded-xl border border-zinc-800 bg-zinc-900 py-2.5 text-sm font-medium text-zinc-300"
+          className="flex-1 rounded-md border border-oat bg-white py-2.5 text-sm font-medium text-espresso"
         >
           + Add items
         </button>
         <button
           onClick={handleSuggest}
           disabled={closetItems.length === 0 || suggesting}
-          className="flex-1 rounded-xl bg-amber-400 py-2.5 text-sm font-semibold text-zinc-950 disabled:opacity-40"
+          className="flex-1 rounded-md bg-espresso py-2.5 text-sm font-medium text-ivory disabled:opacity-40"
         >
           {suggesting ? 'Thinking...' : 'Suggest outfits'}
         </button>
@@ -164,20 +164,20 @@ export default function Closet() {
       {queue.length > 0 && (
         <div className="mt-4 space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-zinc-300">New items ({queue.length})</h2>
+            <h2 className="text-xs font-medium uppercase tracking-wide text-taupe">New items ({queue.length})</h2>
             <button
               onClick={handleAutoTagAll}
               disabled={autoTagging}
-              className="text-xs font-medium text-amber-400 disabled:opacity-50"
+              className="text-xs font-medium text-camel disabled:opacity-50"
             >
               {autoTagging ? 'Auto-tagging...' : 'Auto-tag all'}
             </button>
           </div>
 
           {queue.map((item) => (
-            <div key={item.id} className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3">
+            <div key={item.id} className="rounded-lg border border-oat bg-white p-3">
               <div className="flex gap-3">
-                <img src={item.previewUrl} alt="Item preview" className="h-24 w-20 shrink-0 rounded-lg object-cover" />
+                <img src={item.previewUrl} alt="Item preview" className="h-24 w-20 shrink-0 rounded-md object-cover" />
                 <div className="min-w-0 flex-1 space-y-2">
                   <div className="flex flex-wrap gap-1.5">
                     {ITEM_TYPES.map((t) => (
@@ -185,7 +185,7 @@ export default function Closet() {
                         key={t}
                         onClick={() => updateQueueItem(item.id, { type: t })}
                         className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${
-                          item.type === t ? 'bg-amber-400 text-zinc-950' : 'border border-zinc-800 text-zinc-400'
+                          item.type === t ? 'bg-espresso text-ivory' : 'border border-oat text-taupe'
                         }`}
                       >
                         {t}
@@ -196,10 +196,10 @@ export default function Closet() {
                     value={item.tagsInput}
                     onChange={(e) => updateQueueItem(item.id, { tagsInput: e.target.value })}
                     placeholder="tags: white, cotton, oversized"
-                    className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none focus:border-amber-500"
+                    className="w-full rounded-md border border-oat bg-ivory px-2.5 py-1.5 text-xs text-espresso placeholder-taupe/60 outline-none focus:border-camel"
                   />
                 </div>
-                <button onClick={() => removeQueueItem(item.id)} className="shrink-0 self-start p-1 text-zinc-600" aria-label="Remove">
+                <button onClick={() => removeQueueItem(item.id)} className="shrink-0 self-start p-1 text-taupe/70" aria-label="Remove">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -209,20 +209,20 @@ export default function Closet() {
                 <button
                   onClick={() => autoTagQueueItem(item.id)}
                   disabled={item.status === 'tagging'}
-                  className="text-xs font-medium text-amber-400 disabled:opacity-50"
+                  className="text-xs font-medium text-camel disabled:opacity-50"
                 >
                   {item.status === 'tagging' ? 'Tagging...' : 'Auto-tag this one'}
                 </button>
-                {item.status === 'tagged' && <span className="text-[11px] text-emerald-400">Tagged</span>}
+                {item.status === 'tagged' && <span className="text-[11px] text-camel">Tagged</span>}
               </div>
-              {item.status === 'error' && <p className="mt-1.5 break-words text-[11px] text-red-400">{item.error}</p>}
+              {item.status === 'error' && <p className="mt-1.5 break-words text-[11px] text-rust">{item.error}</p>}
             </div>
           ))}
 
           <button
             onClick={handleSaveQueue}
             disabled={saving}
-            className="w-full rounded-xl bg-amber-400 py-3 text-sm font-semibold text-zinc-950 disabled:opacity-40"
+            className="w-full rounded-md bg-espresso py-3 text-sm font-medium text-ivory disabled:opacity-40"
           >
             {saving ? 'Saving...' : `Save ${queue.length} item${queue.length > 1 ? 's' : ''}`}
           </button>
@@ -230,28 +230,28 @@ export default function Closet() {
       )}
 
       {suggestError && (
-        <p className="mt-4 break-words rounded-xl border border-red-900 bg-red-950/40 p-3 text-xs text-red-400">
+        <p className="mt-4 break-words rounded-md border border-rust/30 bg-rust/10 p-3 text-xs text-rust">
           {suggestError}
         </p>
       )}
 
       {suggestions && (
         <div className="mt-5 space-y-3">
-          <h2 className="text-sm font-semibold text-zinc-300">Suggested outfits</h2>
+          <h2 className="text-xs font-medium uppercase tracking-wide text-taupe">Suggested outfits</h2>
           {suggestions.length === 0 && (
-            <p className="text-sm text-zinc-500">No suggestions came back - try adding a few more items.</p>
+            <p className="text-sm text-taupe">No suggestions came back - try adding a few more items.</p>
           )}
           {suggestions.map((s, i) => {
             const items = s.itemIds.map((id) => itemById.get(id)).filter((x): x is ClosetItem => !!x)
             return (
-              <div key={i} className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3">
-                <p className="text-sm font-semibold text-zinc-100">{s.title}</p>
-                <p className="mt-0.5 text-xs text-zinc-400">{s.reason}</p>
+              <div key={i} className="rounded-lg border border-oat bg-white p-3">
+                <p className="font-display text-lg text-espresso">{s.title}</p>
+                <p className="mt-0.5 text-xs text-taupe">{s.reason}</p>
                 <div className="mt-2 flex gap-2 overflow-x-auto">
                   {items.map((item) => (
                     <div key={item.id} className="w-16 shrink-0">
-                      <OutfitImage blob={item.image} alt={item.type} className="h-20 w-16 rounded-lg object-cover" />
-                      <p className="mt-1 truncate text-center text-[10px] text-zinc-500">{item.type}</p>
+                      <OutfitImage blob={item.image} alt={item.type} className="h-20 w-16 rounded-md border border-oat object-cover" />
+                      <p className="mt-1 truncate text-center text-[10px] text-taupe">{item.type}</p>
                     </div>
                   ))}
                 </div>
@@ -262,9 +262,9 @@ export default function Closet() {
       )}
 
       <div className="mt-6">
-        <h2 className="mb-2 text-sm font-semibold text-zinc-300">Your items ({closetItems.length})</h2>
+        <h2 className="mb-2 text-xs font-medium uppercase tracking-wide text-taupe">Your items ({closetItems.length})</h2>
         {closetItems.length === 0 && queue.length === 0 ? (
-          <p className="mt-4 text-center text-sm text-zinc-500">
+          <p className="mt-4 text-center text-sm text-taupe">
             No items yet. Tap "+ Add items" to start building your closet.
           </p>
         ) : (
@@ -273,10 +273,10 @@ export default function Closet() {
               <button
                 key={item.id}
                 onClick={() => setDetailItem(item)}
-                className="relative aspect-[3/4] overflow-hidden rounded-xl bg-zinc-900"
+                className="relative aspect-[3/4] overflow-hidden rounded-lg border border-oat bg-oat"
               >
                 <OutfitImage blob={item.image} alt={item.type} className="h-full w-full object-cover" />
-                <span className="absolute bottom-0 left-0 right-0 truncate bg-gradient-to-t from-black/80 to-transparent px-1.5 pb-1 pt-3 text-[10px] font-medium text-zinc-100">
+                <span className="absolute bottom-0 left-0 right-0 truncate bg-gradient-to-t from-espresso/85 to-transparent px-1.5 pb-1 pt-3 text-[10px] font-medium tracking-wide text-ivory">
                   {item.type}
                 </span>
               </button>
@@ -323,33 +323,33 @@ function ClosetItemDetail({
   }
 
   return (
-    <div className="fixed inset-0 z-30 flex flex-col bg-zinc-950">
+    <div className="fixed inset-0 z-30 flex flex-col bg-ivory">
       <div className="flex items-center justify-between px-4 pb-2 pt-[calc(env(safe-area-inset-top)+12px)]">
-        <button onClick={onClose} className="p-1 text-zinc-300">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
+        <button onClick={onClose} className="p-1 text-espresso">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="h-6 w-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <button onClick={handleDelete} className="text-zinc-500">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
+        <button onClick={handleDelete} className="text-taupe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="h-6 w-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 7h12M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m2 0-1 13a1 1 0 01-1 1H8a1 1 0 01-1-1L6 7h12z" />
           </svg>
         </button>
       </div>
       <div className="flex-1 overflow-y-auto px-4 pb-8">
-        <div className="overflow-hidden rounded-2xl bg-zinc-900">
+        <div className="overflow-hidden rounded-lg border border-oat bg-oat">
           <OutfitImage blob={item.image} alt={item.type} className="max-h-[55vh] w-full object-contain" />
         </div>
         <div className="mt-5 space-y-4">
           <div>
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-500">Type</label>
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-taupe">Type</label>
             <div className="flex flex-wrap gap-2">
               {ITEM_TYPES.map((t) => (
                 <button
                   key={t}
                   onClick={() => setType(t)}
                   className={`rounded-full px-3 py-1.5 text-xs font-medium ${
-                    type === t ? 'bg-amber-400 text-zinc-950' : 'border border-zinc-800 bg-zinc-900 text-zinc-400'
+                    type === t ? 'bg-espresso text-ivory' : 'border border-oat bg-white text-taupe'
                   }`}
                 >
                   {t}
@@ -358,23 +358,23 @@ function ClosetItemDetail({
             </div>
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-500">Tags</label>
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-taupe">Tags</label>
             <input
               value={tagsInput}
               onChange={(e) => setTagsInput(e.target.value)}
-              className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-sm text-zinc-100 outline-none focus:border-amber-500"
+              className="w-full rounded-md border border-oat bg-white px-3.5 py-2.5 text-sm text-espresso outline-none focus:border-camel"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-500">Notes</label>
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-taupe">Notes</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="w-full resize-none rounded-xl border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-sm text-zinc-100 outline-none focus:border-amber-500"
+              className="w-full resize-none rounded-md border border-oat bg-white px-3.5 py-2.5 text-sm text-espresso outline-none focus:border-camel"
             />
           </div>
-          <button onClick={handleSave} className="w-full rounded-xl bg-amber-400 py-2.5 text-sm font-semibold text-zinc-950">
+          <button onClick={handleSave} className="w-full rounded-md bg-espresso py-2.5 text-sm font-medium text-ivory">
             Save changes
           </button>
         </div>
